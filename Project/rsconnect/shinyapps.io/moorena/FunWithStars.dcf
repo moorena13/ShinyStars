@@ -1,0 +1,13 @@
+name: FunWithStars
+title: FunWithStars
+username:
+account: moorena
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 335810
+bundleId: 1360398
+url: https://moorena.shinyapps.io/FunWithStars/
+when: 1525710096.81147
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: test.R

@@ -24,7 +24,10 @@ ui <- fluidPage(
         sliderInput("xslider", h3("X-Axis Range"),
                     min = 0, max = 100, value = c(0, 100)),
         sliderInput("yslider", h3("Y-Axis Range"),
-                    min = 0, max = 100, value = c(0, 100))
+                    min = 0, max = 100, value = c(0, 100)),
+        actionButton("presetButton", "Preset Inputs"),
+        actionButton("prettyButton", "Pretty Inputs"),
+        h4("Data retrieved from ", a(href="http://www.astronexus.com/hyg", "the HYG database."))
       ),
       
       # Show a plot of the generated distribution
@@ -36,7 +39,7 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(session, input, output) {
-  starData <- read.csv("hygfull.csv\\hygfull.csv")
+  starData <- read.csv("hygfull.csv")
   regex <- "\\S"
   namedStars <- subset(starData, grepl(regex, ProperName))
   
@@ -51,8 +54,8 @@ server <- function(session, input, output) {
   names <- colnames(namedStars)
   names <- names[! names %in% c("StarID", "Hip", "HD", "HR", "Gliese", "BayerFlamsteed", "ProperName", "Spectrum")]
   
-  updateSelectInput(session, inputId = "xaxis", label = "X-Axis Variable", choices = names)
-  updateSelectInput(session, inputId = "yaxis", label = "Y-Axis Variable", choices = names)
+  updateSelectInput(session, inputId = "xaxis", label = "X-Axis Variable", choices = names, selected = "Distance")
+  updateSelectInput(session, inputId = "yaxis", label = "Y-Axis Variable", choices = names, selected = "Mag")
 
   output$graph <- renderPlotly({
     testdata <- namedStars
@@ -119,6 +122,19 @@ server <- function(session, input, output) {
       browseURL(starFriendWebsite)
     }
   })
+  
+  observeEvent(input$presetButton,
+               {
+                 updateSelectInput(session, inputId = "xaxis", label = "X-Axis Variable", choices = names, selected = "Distance")
+                 updateSelectInput(session, inputId = "yaxis", label = "Y-Axis Variable", choices = names, selected = "Mag")
+               })
+  
+  observeEvent(input$prettyButton,
+               {
+                 updateSelectInput(session, inputId = "xaxis", label = "X-Axis Variable", choices = names, selected = "ColorIndex")
+                 updateSelectInput(session, inputId = "yaxis", label = "Y-Axis Variable", choices = names, selected = "Mag")
+               })
+  
 }
 
 
